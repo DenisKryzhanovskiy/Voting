@@ -10,8 +10,7 @@
 </head> 
 <body> 
 	 <!-- Footer --> 
-	 <footer style="background: #d7d7d7 ; " class="page-footer font
-small black"> 
+	 <footer style="background: #d7d7d7 ; " class="page-footer fontsmall black"> 
 	   <!-- Copyright --> 
 	   <div class="footer-copyright text-center py-3 px-3" > 
 		  Демонстрационное веб-приложение JavaEE © 2023 Copyright: 

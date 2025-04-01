@@ -1,5 +1,6 @@
 package controller;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,7 +12,7 @@ import java.io.PrintWriter;
 /**
  * Servlet implementation class VoteServlet
  */
-@WebServlet("/HelloVoteServlet")
+@WebServlet("/vote")
 public class VoteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -27,13 +28,9 @@ public class VoteServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html"); 
-	    PrintWriter writer = response.getWriter(); 
-	    try { 
-	         writer.println("<h2>Привет VoteServlet</h2>"); 
-	     } finally { 
-	         writer.close();   
-	     } 
+		
+		RequestDispatcher rd = request.getRequestDispatcher("/views/vote.jsp");
+        rd.forward(request, response);
 	 
 	 }
 

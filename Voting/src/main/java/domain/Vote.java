@@ -43,6 +43,10 @@ public class Vote {
     public void setDateStart(LocalDate dateStart) {
         this.dateStart = dateStart;
     }
+    
+    public LocalDate getDateFinish() {
+    	return dateFinish;
+    }
    
     public void setDateFinish(LocalDate dateFinish) {
         this.dateFinish = dateFinish;

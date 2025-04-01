@@ -2,7 +2,8 @@
 	pageEncoding="UTF-8"%> 
 <!DOCTYPE html> 
 <html lang="ru"> 
-<head>  
+<head>
+<link rel="stylesheet" type="text/css" href="css/style.css">  
 <meta charset="UTF-8"> 
 <!-- Настройка viewport --> 
  <meta name="viewport" content="width=device-width, initial-scale=1"> 
@@ -21,13 +22,13 @@
     				<h2>Функции системы</h2> 
     				<ul class="list-group list-group-flush"> 
      					 <li class="list-group-item list-group-item
-primary"><a href="#">Голосование</a> 
+primary"><a href="/Voting/vote">Голосование</a> 
      					 <li class="list-group-item list-group-item
-info"><a href="#">Вопросы голосования</a>
+info"><a href="/Voting/question">Вопросы голосования</a>
 						 <li class="list-group-item list-group-item
-info"><a href="#">Голосующий</a> 
+info"><a href="/Voting/user">Голосующий</a> 
 						 <li class="list-group-item list-group-item
-info"><a href="#">Результат голосования</a>  
+info"><a href="/Voting/choice">Результат голосования</a>  
     				</ul> 
      		   </div> 
   			<br><br> 
