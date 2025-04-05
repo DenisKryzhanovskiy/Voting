@@ -14,26 +14,26 @@
  
 </head> 
 <body> 
- 	 <div class="container-fluid"> 
-	 <jsp:include page="/views/header.jsp" /> 
- 	 <div class="container"> 
-  		  <br><br><br> 
-    		   <div class="list-group text-center py-3 px-3"> 
-    				<h2>Функции системы</h2> 
-    				<ul class="list-group list-group-flush"> 
-     					 <li class="list-group-item list-group-item
-primary"><a href="/Voting/vote">Голосование</a> 
-     					 <li class="list-group-item list-group-item
-info"><a href="/Voting/question">Вопросы голосования</a>
-						 <li class="list-group-item list-group-item
-info"><a href="/Voting/user">Голосующий</a> 
-						 <li class="list-group-item list-group-item
-info"><a href="/Voting/choice">Результат голосования</a>  
-    				</ul> 
-     		   </div> 
-  			<br><br> 
- 	  </div> 
+	<div class="container-fluid"> 
+	<jsp:include page="/views/header.jsp" /> 
+	<div class="container"> 
+		<br><br><br> 
+			<div class="list-group text-center py-3 px-3"> 
+				<h2>Функции системы</h2> 
+				<ul class="list-group list-group-flush"> 
+					<li class="list-group-item list-group-itemprimary">
+						<a href="/Voting/vote">Голосование</a> 
+					<li class="list-group-item list-group-iteminfo">
+						<a href="/Voting/question">Вопросы голосования</a>
+					<li class="list-group-item list-group-iteminfo">
+						<a href="/Voting/user">Голосующий</a> 
+					<li class="list-group-item list-group-iteminfo">
+						<a href="/Voting/choice">Результат голосования</a>  
+				</ul> 
+			</div> 
+		<br><br> 
+	</div> 
 	<jsp:include page="/views/footer.jsp" />   	  
-</div> 
+	</div> 
 </body> 
 </html> 

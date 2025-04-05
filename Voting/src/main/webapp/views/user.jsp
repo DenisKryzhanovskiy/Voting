@@ -2,33 +2,48 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%> 
 <%@ page import="domain.User"%>
-<%
-
-User u1 = new User(1L, "Иван", "Иванов", "ivanov@example.com", "+79001234567", "Проголосовал");
-User u2 = new User(2L, "Петр", "Петров", "petrov@example.com", "+79007654321", "Проголосовал");
-User u3 = new User(3L, "Сидор", "Сидоров", "sidorov@example.com", "+79001122333", "Не проголосовал");
-User u4 = new User(4L, "Анна", "Смирнова", "smirnova@example.com", "+79004455666", "Проголосовал");
-User[] user = new User[]{u1, u2, u3, u4}; 
-pageContext.setAttribute("users", user); 
-%> 
 
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" type="text/css" href="css/style.css">
-<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-<meta charset="UTF-8">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
-<script defer src="${pageContext.request.contextPath}/js/jquery-3.7.1.min.js"></script>
-<script defer src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js"></script>
 <head>
+<meta charset="UTF-8">
 <title>Голосующий</title>
+
+<link rel="stylesheet" type="text/css" href="css/style.css"> 
+
+<!-- Bootstrap CSS --> 
+<link rel="stylesheet" href="css/bootstrap.min.css"> 
+<!-- jQuery --> 
+<script defer src="js/jquery-3.7.1.js"></script> 
+<!-- Bootstrap JS + Popper JS --> 
+<script defer src="js/bootstrap.min.js"></script>
 </head>
 <body>
-<header>
-		<jsp:include page="/views/header.jsp"/>
-	</header>
-	<main>
- <div class="row justify-content-start "> 
+
+
+ <div class="container-fluid"> 
+ 
+<!-- Header --> 
+<jsp:include page="/views/header.jsp" />
+<!-- /Header -->
+
+    <c:if test="${not empty errorMessage}">
+        <p style="color:red;">${errorMessage}</p>
+    </c:if>
+
+    <%-- ADD THIS BLOCK --%>
+    <%
+    java.util.List pro = (java.util.List) request.getAttribute("pro");
+    if (pro == null) {
+        out.println("<p>Список User не установлен!</p>");
+    } else if (pro.isEmpty()) {
+        out.println("<p>Список User пуст!</p>");
+    } else {
+        out.println("<p>Список User содержит " + pro.size() + " элементов.</p>");
+    }
+    %>
+    <%-- END OF ADDED BLOCK --%>
+
   <div class="container-fluid"> 
       <div class="row justify-content-start "> 
         <div class="col-8 border bg-light px-4"> 
@@ -42,15 +57,15 @@ pageContext.setAttribute("users", user);
               <th scope="col">Статус</th> 
               <th scope="col">Редактировать</th> 
               <th scope="col">Удалить</th> 
-            </thead> 
+            </thead>
             <tbody> 
-              <c:forEach var="user" items="${users}"> 
+              <c:forEach var="user" items="${pro}"> 
                 <tr>
-				  <td>${user.firstName}</td>
-				  <td>${user.lastName}</td>
-				  <td>${user.email}</td>
-				  <td>${user.phone}</td>
-				  <td>${user.status}</td> 
+				  <td>${user.getfirstName}</td>
+				  <td>${user.getlastName}</td>
+				  <td>${user.getemail}</td>
+				  <td>${user.getphone}</td>
+				  <td>${user.getstatus}</td> 
                   <td width="20"><a href="#" role="button" 
                      class="btn btn-outline-primary">  
                      <img alt="Редактировать" 

@@ -2,34 +2,49 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%> 
 <%@ page import="domain.Vote"%>
-<%@ page import="java.time.LocalDate" %>
-<%
-
-Vote r1 = new Vote(1L, "Выборы президента компании", LocalDate.parse("2023-10-26"), LocalDate.parse("2023-11-05"), "Активно");
-Vote r2 = new Vote(2L, "Выбор нового логотипа", LocalDate.parse("2023-11-01"), LocalDate.parse("2023-11-10"), "Активно");
-Vote r3 = new Vote(3L, "Опрос об условиях труда", LocalDate.parse("2023-11-15"), LocalDate.parse("2023-11-22"), "Завершено");
-Vote[] vote = new Vote[]{r1, r2, r3}; 
-pageContext.setAttribute("votes", vote); 
-%> 
 
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" type="text/css" href="css/style.css">
-<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-<meta charset="UTF-8">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
-<script defer src="${pageContext.request.contextPath}/js/jquery-3.7.1.min.js"></script>
-<script defer src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js"></script>
 <head>
+<meta charset="UTF-8">
 <title>Голосование</title>
+
+<link rel="stylesheet" type="text/css" href="css/style.css"> 
+
+<!-- Bootstrap CSS --> 
+<link rel="stylesheet" href="css/bootstrap.min.css"> 
+<!-- jQuery --> 
+<script defer src="js/jquery-3.7.1.js"></script> 
+<!-- Bootstrap JS + Popper JS --> 
+<script defer src="js/bootstrap.min.js"></script>
 </head>
 <body>
- <header>
-		<jsp:include page="/views/header.jsp"/>
-	</header>
-	<main>
-<div class="row justify-content-start "> 
-  <div class="container-fluid"> 
+
+
+ <div class="container-fluid"> 
+ 
+<!-- Header --> 
+<jsp:include page="/views/header.jsp" />
+<!-- /Header -->
+
+    <c:if test="${not empty errorMessage}">
+        <p style="color:red;">${errorMessage}</p>
+    </c:if>
+
+    <%-- ADD THIS BLOCK --%>
+    <%
+    java.util.List pro = (java.util.List) request.getAttribute("pro");
+    if (pro == null) {
+        out.println("<p>Список Vote не установлен!</p>");
+    } else if (pro.isEmpty()) {
+        out.println("<p>Список Vote пуст!</p>");
+    } else {
+        out.println("<p>Список Vote содержит " + pro.size() + " элементов.</p>");
+    }
+    %>
+    <%-- END OF ADDED BLOCK --%>
+
+ <div class="container-fluid"> 
       <div class="row justify-content-start "> 
         <div class="col-8 border bg-light px-4"> 
           <h3>Список голосований</h3> 
@@ -43,12 +58,12 @@ pageContext.setAttribute("votes", vote);
               <th scope="col">Удалить</th> 
             </thead> 
             <tbody> 
-              <c:forEach var="vote" items="${votes}"> 
+              <c:forEach var="vote" items="${pro}"> 
                 <tr>
-				  <td>${vote.title}</td>
-				  <td>${vote.dateStart}</td>
-				  <td>${vote.dateFinish}</td>
-				  <td>${vote.status}</td> 
+				  <td>${vote.gettitle}</td>
+				  <td>${vote.getdateStart}</td>
+				  <td>${vote.getdateFinish}</td>
+				  <td>${vote.getstatus}</td> 
                   <td width="5" height="5"><a href="#" role="button" 
                      class="btn btn-outline-primary">  
                      <img alt="Редактировать" 
