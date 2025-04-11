@@ -33,13 +33,13 @@
 
     <%-- ADD THIS BLOCK --%>
     <%
-    java.util.List pro = (java.util.List) request.getAttribute("pro");
-    if (pro == null) {
+    java.util.List vo = (java.util.List) request.getAttribute("vo");
+    if (vo == null) {
         out.println("<p>Список Vote не установлен!</p>");
-    } else if (pro.isEmpty()) {
+    } else if (vo.isEmpty()) {
         out.println("<p>Список Vote пуст!</p>");
     } else {
-        out.println("<p>Список Vote содержит " + pro.size() + " элементов.</p>");
+        out.println("<p>Список Vote содержит " + vo.size() + " элементов.</p>");
     }
     %>
     <%-- END OF ADDED BLOCK --%>
@@ -58,12 +58,12 @@
               <th scope="col">Удалить</th> 
             </thead> 
             <tbody> 
-              <c:forEach var="vote" items="${pro}"> 
+              <c:forEach var="vote" items="${vo}"> 
                 <tr>
-				  <td>${vote.gettitle}</td>
-				  <td>${vote.getdateStart}</td>
-				  <td>${vote.getdateFinish}</td>
-				  <td>${vote.getstatus}</td> 
+				  <td>${vote.title}</td>
+				  <td>${vote.dateStart}</td>
+				  <td>${vote.dateFinish}</td>
+				  <td>${vote.status}</td> 
                   <td width="5" height="5"><a href="#" role="button" 
                      class="btn btn-outline-primary">  
                      <img alt="Редактировать" 

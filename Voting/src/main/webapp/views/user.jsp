@@ -33,13 +33,13 @@
 
     <%-- ADD THIS BLOCK --%>
     <%
-    java.util.List pro = (java.util.List) request.getAttribute("pro");
-    if (pro == null) {
+    java.util.List us = (java.util.List) request.getAttribute("us");
+    if (us == null) {
         out.println("<p>Список User не установлен!</p>");
-    } else if (pro.isEmpty()) {
+    } else if (us.isEmpty()) {
         out.println("<p>Список User пуст!</p>");
     } else {
-        out.println("<p>Список User содержит " + pro.size() + " элементов.</p>");
+        out.println("<p>Список User содержит " + us.size() + " элементов.</p>");
     }
     %>
     <%-- END OF ADDED BLOCK --%>
@@ -59,13 +59,13 @@
               <th scope="col">Удалить</th> 
             </thead>
             <tbody> 
-              <c:forEach var="user" items="${pro}"> 
+              <c:forEach var="user" items="${us}"> 
                 <tr>
-				  <td>${user.getfirstName}</td>
-				  <td>${user.getlastName}</td>
-				  <td>${user.getemail}</td>
-				  <td>${user.getphone}</td>
-				  <td>${user.getstatus}</td> 
+				  <td>${user.firstName}</td>
+				  <td>${user.lastName}</td>
+				  <td>${user.email}</td>
+				  <td>${user.phone}</td>
+				  <td>${user.status}</td> 
                   <td width="20"><a href="#" role="button" 
                      class="btn btn-outline-primary">  
                      <img alt="Редактировать" 

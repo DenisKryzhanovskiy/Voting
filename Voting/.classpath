@@ -13,5 +13,11 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/kryz-/Documents/Downloads/mysql-connector-j-9.2.0/mysql-connector-j-9.2.0/mysql-connector-j-9.2.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/kryz-/Documents/Downloads/postgresql-42.5.6.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

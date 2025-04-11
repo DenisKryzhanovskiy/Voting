@@ -9,11 +9,11 @@ import exception.DAOException;
 public class UserDbDAO implements RepositoryDAO<User> {
 
     // SQL-запросы к таблице PC базы данных
-    private static final String SELECT_ALL_USERS = "SELECT id, firstName, lastName, email, phone, status FROM User";
-    private static final String SELECT_USER_BY_ID = "SELECT id, firstName, lastName, email, phone, status FROM User WHERE id = ?";
-    private static final String INSERT_USER = "INSERT INTO User (firstName, lastName, email, phone, status) VALUES (?, ?, ?, ?, ?)";
-    private static final String UPDATE_USER = "UPDATE User SET firstName = ?, lastName = ?, email = ?, phone = ?, status = ? WHERE id = ?";
-    private static final String DELETE_USER = "DELETE FROM User WHERE id = ?";
+    private static final String SELECT_ALL_USERS = "SELECT Id, firstName, lastName, email, phone, status FROM \"User\"";
+    private static final String SELECT_USER_BY_ID = "SELECT Id, firstName, lastName, email, phone, status FROM \"User\" WHERE Id = ?";
+    private static final String INSERT_USER = "INSERT INTO \"User\" (firstName, lastName, email, phone, status) VALUES (?, ?, ?, ?, ?)";
+    private static final String UPDATE_USER = "UPDATE \"User\" SET firstName = ?, lastName = ?, email = ?, phone = ?, status = ? WHERE Id = ?";
+    private static final String DELETE_USER = "DELETE FROM \"User\" WHERE Id = ?";
 
 
     private final ConnectionBuilder builder = new DbConnectionBuilder();
@@ -90,7 +90,7 @@ public class UserDbDAO implements RepositoryDAO<User> {
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                 	user = new User();
-                	user.setId(rs.getLong("id"));
+                	user.setId(rs.getLong("Id"));
                 	user.setFirstName(rs.getString("firstName"));
                 	user.setLastName(rs.getString("lastName"));
                 	user.setEmail(rs.getString("email"));
@@ -113,7 +113,7 @@ public class UserDbDAO implements RepositoryDAO<User> {
 
             while (rs.next()) {
                 User user = new User();
-            	user.setId(rs.getLong("id"));
+            	user.setId(rs.getLong("Id"));
             	user.setFirstName(rs.getString("firstName"));
             	user.setLastName(rs.getString("lastName"));
             	user.setEmail(rs.getString("email"));
