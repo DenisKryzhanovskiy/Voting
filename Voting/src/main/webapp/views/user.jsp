@@ -27,39 +27,37 @@
 <jsp:include page="/views/header.jsp" />
 <!-- /Header -->
 
-    <c:if test="${not empty errorMessage}">
-        <p style="color:red;">${errorMessage}</p>
-    </c:if>
-
     <%-- ADD THIS BLOCK --%>
     <%
-    java.util.List us = (java.util.List) request.getAttribute("us");
-    if (us == null) {
-        out.println("<p>Список User не установлен!</p>");
-    } else if (us.isEmpty()) {
-        out.println("<p>Список User пуст!</p>");
+    java.util.List users = (java.util.List) request.getAttribute("users");
+    if (users == null) {
+        out.println("<p>Список Голосующих не установлен!</p>");
+    } else if (users.isEmpty()) {
+        out.println("<p>Список Голосующих пуст!</p>");
     } else {
-        out.println("<p>Список User содержит " + us.size() + " элементов.</p>");
+        out.println("<p>Список Голосующих содержит " + users.size() + " элементов.</p>");
     }
     %>
     <%-- END OF ADDED BLOCK --%>
 
-  <div class="container-fluid"> 
+<div class="container-fluid"> 
       <div class="row justify-content-start "> 
         <div class="col-8 border bg-light px-4"> 
           <h3>Список голосующих</h3> 
           <table class="table"> 
-            <thead> 
+            <thead>
+              <tr> 
               <th scope="col">Имя</th>
               <th scope="col">Фамилия</th>
               <th scope="col">Почта</th>
               <th scope="col">Телефон</th>
               <th scope="col">Статус</th> 
               <th scope="col">Редактировать</th> 
-              <th scope="col">Удалить</th> 
+              <th scope="col">Удалить</th>
+              </tr> 
             </thead>
             <tbody> 
-              <c:forEach var="user" items="${us}"> 
+              <c:forEach var="user" items="${users}"> 
                 <tr>
 				  <td>${user.firstName}</td>
 				  <td>${user.lastName}</td>
@@ -80,14 +78,14 @@
           </table> 
         </div> 
         <div class="col-4 border px-4"> 
-          <form method="POST" action=""> 
+          <form method="POST" action="${pageContext.request.contextPath}/user"> 
             <h3>Новый голосующий</h3> 
             <div class="mb-3"> 
               <br> <label for="inputfirstName"  
               class="col-sm-3 col-form-label">Имя</label> 
               <div class="col-sm-6"> 
                 <input type="text" name="inputfirstName"  
-                  class="form-control" id="inputfirstName" /> 
+                  class="form-control" id="userfirstName" required placeholder="Введите имя"/> 
             </div> 
           </div>
           <div class="mb-3"> 
@@ -95,43 +93,48 @@
               class="col-sm-3 col-form-label">Фамилия</label> 
               <div class="col-sm-6"> 
                 <input type="text" name="inputlastName"  
-                  class="form-control" id="inputlastName" /> 
+                  class="form-control" id="userlastName" required placeholder="Введите фамилию"/> 
             </div> 
           </div>
            <div class="mb-3"> 
               <br> <label for="inputemail"  
               class="col-sm-3 col-form-label">Почта</label> 
               <div class="col-sm-6"> 
-                <input type="text" name="inputemail"  
-                  class="form-control" id="inputemail" /> 
+                <input type="email" name="inputemail"  
+                  class="form-control" id="useremail" placeholder="pochta@mail.ru"/> 
             </div>
+          </div>
             <div class="mb-3"> 
-              <br> <label for="inpuphone"  
+              <br> <label for="inputphone"  
               class="col-sm-3 col-form-label">Телефон</label> 
               <div class="col-sm-6"> 
-                <input type="text" name="inpuphone"  
-                  class="form-control" id="inpuphone" /> 
+                <input type="text" name="inputphone"  
+                  class="form-control" id="userphone" placeholder="+79999999999"/> 
             </div>  
           </div>
           <div class="mb-3"> 
-              <br> <label for="inpustatus"  
+              <br> <label for="inputstatus"  
               class="col-sm-3 col-form-label">Статус</label> 
               <div class="col-sm-6"> 
-                <input type="text" name="inpustatus"  
-                  class="form-control" id="inpustatus" /> 
+                <select class="form-control" id="userstatus" name="inputstatus">
+                  <option value="">Выберите статус голосующего</option>
+                  <option value="Проголосовал">Проголосовал</option>
+                  <option value="Не проголосовал">Не проголосовал</option>
+                </select> 
             </div>  
           </div>        
-          <p> 
+          <p>     
+    <c:if test="${not empty errorMessage}">
+        <p style="color:red;">${errorMessage}</p>
+    </c:if> 
             <br> <br> <br> 
-<button type="submit"  
-class="btn btn-primary">Добавить</button> 
+<button type="submit" class="btn btn-primary">Добавить</button>
+</p>  
 <br> 
-</p> 
-</form> 
-</div> 
-</div> 
-</div> 
- </main> 
+</form>
+</div>
+</div>
+</div>
 <footer>
 		<jsp:include page="/views/footer.jsp"/>
 	</footer>

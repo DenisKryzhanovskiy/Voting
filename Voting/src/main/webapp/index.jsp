@@ -31,9 +31,12 @@
 						<a href="/Voting/choice">Результат голосования</a>  
 				</ul> 
 			</div> 
-		<br><br> 
-	</div> 
-	<jsp:include page="/views/footer.jsp" />   	  
-	</div> 
+		<br><br>
+<br> 
+</div> 
+</div>  
+	<footer>
+		<jsp:include page="/views/footer.jsp"/>
+	</footer>
 </body> 
 </html> 

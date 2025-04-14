@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%> 
 <%@ page import="domain.Choice"%>
+<%@ page import="domain.Question" %>
+<%@ page import="domain.User" %>
 
 <!DOCTYPE html>
 <html>
@@ -27,19 +29,15 @@
 <jsp:include page="/views/header.jsp" />
 <!-- /Header -->
 
-    <c:if test="${not empty errorMessage}">
-        <p style="color:red;">${errorMessage}</p>
-    </c:if>
-
     <%-- ADD THIS BLOCK --%>
     <%
-    java.util.List cho = (java.util.List) request.getAttribute("cho");
-    if (cho == null) {
-        out.println("<p>Список Choice не установлен!</p>");
-    } else if (cho.isEmpty()) {
-        out.println("<p>Список Choice пуст!</p>");
+    java.util.List choices = (java.util.List) request.getAttribute("choices");
+    if (choices == null) {
+        out.println("<p>Список Результатов Голосования не установлен!</p>");
+    } else if (choices.isEmpty()) {
+        out.println("<p>Список Результатов Голосования пуст!</p>");
     } else {
-        out.println("<p>Список Choice содержит " + cho.size() + " элементов.</p>");
+        out.println("<p>Список Результатов Голосования содержит " + choices.size() + " элементов.</p>");
     }
     %>
     <%-- END OF ADDED BLOCK --%>
@@ -57,7 +55,7 @@
               <th scope="col">Удалить</th> 
             </thead> 
             <tbody> 
-              <c:forEach var="choice" items="${cho}"> 
+              <c:forEach var="choice" items="${choices}"> 
                 <tr>
 				  <td>${choice.questionId}</td>
 				  <td>${choice.userId}</td>
@@ -76,55 +74,51 @@
           </table> 
         </div> 
         <div class="col-4 border px-4"> 
-          <form method="POST" action=""> 
+          <form method="POST" action="${pageContext.request.contextPath}/choice"> 
             <h3>Новый результат голосования</h3>
             <div class="mb-3">
              <label for="questionId" class="col-sm-3 col-form-label">Код вопроса голосования</label>
-						 <div class="col-sm-6">
-						 	<select name="role" class="form-control">
-							 <option>Выберите вопрос голосования</option>
-								 <c:forEach var="question" items="${questions}">
-									 <option value="${question}">
-									 	<c:out value="${question.getContent()}"></c:out>
-									 </option>
-								 </c:forEach>
-							 </select>
-
+						 <div class="col-sm-7">
+						 	<select name="questionId" class="form-control" required>
+							 <option value="">Выберете вопрос голосования</option>
+                			 <c:forEach var="question" items="${questions}">
+                  				<option value="${question.id}">${question.content}
+                  				</option>
+							 </c:forEach>
+							</select>
 						 </div>
 					 </div> 
             <div class="mb-3">
              <label for="userId" class="col-sm-3 col-form-label">Код голосующего</label>
-						 <div class="col-sm-6">
-						 	<select name="role" class="form-control">
-							 <option>Выберите голосующего</option>
-								 <c:forEach var="user" items="${users}">
-									 <option value="${user}">
-									 	<c:out value="${user.getFirstName()} ${user.getLastName()}"></c:out>
-									 </option>
-								 </c:forEach>
-							 </select>
-
+						 <div class="col-sm-7">
+						 	<select name="userId" class="form-control" required>
+							 <option value="">Выберите голосующего</option>
+                			 <c:forEach var="user" items="${users}">
+                  				<option value="${user.id}">${user.firstName} ${user.lastName}
+                  				</option>
+							 </c:forEach>
+							</select>
 						 </div>
 					 </div> 
             <div class="mb-3"> 
-              <br> <label for="inputchoiceUser"  
-              class="col-sm-3 col-form-label">Выбор голосующего</label> 
-              <div class="col-sm-6"> 
-                <input type="text" name="inputchoiceUser"  
-                  class="form-control" id="inputchoiceUser" /> 
+              <br> <label for="inputchoiceUser" class="col-sm-3 col-form-label">Выбор голосующего</label> 
+              <div class="col-sm-7"> 
+                <input type="text" name="choiceUser" class="form-control" id="choiceUser" placeholder="Введите выбор голосующего"/> 
             </div> 
           </div>
-          <p> 
+          <p>
+              <c:if test="${not empty errorMessage}">
+        <p style="color:red;">${errorMessage}</p>
+    </c:if> 
             <br> <br> <br> 
 <button type="submit"  
 class="btn btn-primary">Добавить</button> 
-<br> 
 </p> 
+<br> 
 </form> 
 </div> 
 </div> 
 </div>
- </main> 
 <footer>
 		<jsp:include page="/views/footer.jsp"/>
 	</footer>

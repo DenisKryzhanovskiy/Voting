@@ -1,6 +1,9 @@
 package dao;
 
 import domain.Choice;
+import domain.Question;
+import domain.User;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,15 @@ public class ChoiceDbDAO implements RepositoryDAO<Choice> {
         return builder.getConnection();
     }
 
+    private Choice mapResultSetToChoice(ResultSet rs) throws SQLException {
+    	Choice choice = new Choice();
+    	choice.setId(rs.getLong("id"));
+    	choice.setQuestionId(rs.getLong("questionId"));
+    	choice.setUserId(rs.getLong("userId"));
+    	choice.setChoiceUser(rs.getString("choiceUser"));
+        return choice;
+    }
+    
     @Override
     public Long insert(Choice choice) throws DAOException {
         try (Connection con = getConnection();
@@ -42,7 +54,7 @@ public class ChoiceDbDAO implements RepositoryDAO<Choice> {
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при добавлении Choice: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при добавлении Выбора голосующего: " + e.getMessage(), e);
         }
     }
 
@@ -59,7 +71,7 @@ public class ChoiceDbDAO implements RepositoryDAO<Choice> {
             pst.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при обновлении Choice: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при обновлении Выбора голосующего: " + e.getMessage(), e);
         }
     }
 
@@ -72,7 +84,7 @@ public class ChoiceDbDAO implements RepositoryDAO<Choice> {
             pst.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при удалении Choice: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при удалении Выбора голосующего: " + e.getMessage(), e);
         }
     }
 
@@ -86,15 +98,11 @@ public class ChoiceDbDAO implements RepositoryDAO<Choice> {
 
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
-                	choice = new Choice();
-                    choice.setId(rs.getLong("id"));
-                    choice.setQuestionId(rs.getLong("questionId"));
-                    choice.setUserId(rs.getLong("userId"));
-                    choice.setChoiceUser(rs.getString("choiceUser"));
+                	choice = mapResultSetToChoice(rs);
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при поиске Choice по ID: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при получении Выбора голосующего по ID: " + e.getMessage(), e);
         }
         return choice;
     }
@@ -107,19 +115,11 @@ public class ChoiceDbDAO implements RepositoryDAO<Choice> {
              ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
-            	Choice choice = new Choice();
-                choice.setId(rs.getLong("id"));
-                choice.setQuestionId(rs.getLong("questionId"));
-                choice.setUserId(rs.getLong("userId"));
-                choice.setChoiceUser(rs.getString("choiceUser"));
-
-                choices.add(choice);
+            	Choice choice = mapResultSetToChoice(rs);
+            	choices.add(choice);
             }
-
-            System.out.println("Найдено Choice: " + choices.size()); // ADD THIS LINE
-
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при получении списка Choice: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при получении списка Выборов голосующих: " + e.getMessage(), e);
         }
         return choices;
     }
@@ -141,7 +141,7 @@ public List<Choice> getByQuestionId(int questionId) throws DAOException {
             }
         }
     } catch (SQLException e) {
-        throw new DAOException("Ошибка при получении Choice по questionId: " + e.getMessage(), e);
+        throw new DAOException("Ошибка при получении Выбора голосующего по choiceId: " + e.getMessage(), e);
     }
     return choices;
 }
@@ -163,7 +163,7 @@ public List<Choice> getByUserId(int userId) throws DAOException {
             }
         }
     } catch (SQLException e) {
-        throw new DAOException("Ошибка при получении Choice по userId: " + e.getMessage(), e);
+        throw new DAOException("Ошибка при получении Выбора голосующего по userId: " + e.getMessage(), e);
     }
     return choices;
 }

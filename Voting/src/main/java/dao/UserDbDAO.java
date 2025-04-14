@@ -43,7 +43,7 @@ public class UserDbDAO implements RepositoryDAO<User> {
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при добавлении User: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при добавлении Голосующего: " + e.getMessage(), e);
         }
     }
 
@@ -62,7 +62,7 @@ public class UserDbDAO implements RepositoryDAO<User> {
             pst.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при обновлении User: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при обновлении Голосующего: " + e.getMessage(), e);
         }
     }
 
@@ -75,7 +75,7 @@ public class UserDbDAO implements RepositoryDAO<User> {
             pst.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при удалении User: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при удалении Голосующего: " + e.getMessage(), e);
         }
     }
 
@@ -99,7 +99,7 @@ public class UserDbDAO implements RepositoryDAO<User> {
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при поиске User по ID: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при поиске Голосующего по ID: " + e.getMessage(), e);
         }
         return user;
     }
@@ -126,7 +126,7 @@ public class UserDbDAO implements RepositoryDAO<User> {
             System.out.println("Найдено User: " + users.size()); // ADD THIS LINE
 
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при получении списка User: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при получении списка Голосующих: " + e.getMessage(), e);
         }
         return users;
     }

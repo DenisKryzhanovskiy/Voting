@@ -7,9 +7,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import dao.ConnectionProperty;
@@ -30,51 +32,77 @@ public class QuestionServlet extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    private QuestionDbDAO questionDAO = new QuestionDbDAO();
+    private VoteDbDAO voteDAO = new VoteDbDAO();
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
-        
-		response.setContentType("text/html");
-	    String userPath;
-	    List<Question> que = null;
-	    Map<String, Vote> voteMap = null; 
-		
-		try {
-	        new ConnectionProperty();
-	        QuestionDbDAO queDAO = new QuestionDbDAO();
-	        VoteDbDAO voteDAO = new VoteDbDAO();
-	        que = queDAO.findAll();
-	        
-	        List<Vote> allVotes = voteDAO.findAll();
-	        voteMap = new HashMap<>();
-	        for (Vote vote : allVotes) {
-	        	voteMap.put(vote.getTitle(), vote);
-	        }
+        try {
+            List<Question> questions = questionDAO.findAll(); 
+             List<Vote> votes = voteDAO.findAll(); 
+            request.setAttribute("questions", questions);
+            request.setAttribute("votes", votes); 
 
-	        request.setAttribute("que", que);
-	        request.setAttribute("voteMap", voteMap); 
+        } catch (DAOException e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Ошибка при получении списка Вопросов голосования: " + e.getMessage());
+        }
 
-	        System.out.println("Список Question установлен в атрибут: " + (que != null ? que.size() : "null")); // ADD THIS LINE
+        request.getRequestDispatcher("/views/question.jsp").forward(request, response);
+    }
 
-	    } catch (DAOException e) {
-	        e.printStackTrace();
-	        request.setAttribute("errorMessage", "Ошибка при получении списка Question: " + e.getMessage());
-	    }
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String voteIdStr = request.getParameter("voteId");
+        String content = request.getParameter("content");
+        String dateVoteStr = request.getParameter("dateVote");
 
-	        request.getRequestDispatcher("/views/question.jsp").forward(request, response);
-        
-	}
+        try {
+            // 1. Validate Input
+            if (voteIdStr == null || voteIdStr.isEmpty() || content == null || content.isEmpty() || dateVoteStr == null || dateVoteStr.isEmpty()) {
+                request.getSession().setAttribute("errorMessage", "Пожалуйста, заполните все поля.");
+                response.sendRedirect(request.getContextPath() + "/question"); 
+                return;
+            }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-		
-	}
+            Long voteId;
+            try {
+                voteId = Long.parseLong(voteIdStr);
+            } catch (NumberFormatException e) {
+                request.getSession().setAttribute("errorMessage", "Invalid Question ID format.");
+                response.sendRedirect(request.getContextPath() + "/question");
+                return;
+            }
 
+            LocalDate dateVote;
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                dateVote = LocalDate.parse(dateVoteStr, formatter);
+            } catch (DateTimeParseException e) {
+                request.getSession().setAttribute("errorMessage", "Неверный формат даты. Пожалуйста введите дату в следующем формате Год-Месяц-День.");
+                response.sendRedirect(request.getContextPath() + "/question");
+                return;
+            }
+
+            // 2. Create Question Object
+            Question newQuestion = new Question();
+            newQuestion.setVoteId(voteId);
+            newQuestion.setContent(content);
+            newQuestion.setDateVote(dateVote);
+
+            // 3. Save Question to DB
+            questionDAO.insert(newQuestion);
+
+            // 4. Success - Redirect with message
+            request.getSession().setAttribute("successMessage", "Question added successfully!");
+            response.sendRedirect(request.getContextPath() + "/question"); // Redirect to question list
+
+        } catch (DAOException e) {
+            e.printStackTrace();
+            request.getSession().setAttribute("errorMessage", "Error adding question: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/question");
+        }
+    }
 }

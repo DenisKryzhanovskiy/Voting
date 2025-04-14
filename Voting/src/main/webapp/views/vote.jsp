@@ -27,19 +27,15 @@
 <jsp:include page="/views/header.jsp" />
 <!-- /Header -->
 
-    <c:if test="${not empty errorMessage}">
-        <p style="color:red;">${errorMessage}</p>
-    </c:if>
-
     <%-- ADD THIS BLOCK --%>
     <%
-    java.util.List vo = (java.util.List) request.getAttribute("vo");
-    if (vo == null) {
-        out.println("<p>Список Vote не установлен!</p>");
-    } else if (vo.isEmpty()) {
-        out.println("<p>Список Vote пуст!</p>");
+    java.util.List votes = (java.util.List) request.getAttribute("votes");
+    if (votes == null) {
+        out.println("<p>Список Голосований не установлен!</p>");
+    } else if (votes.isEmpty()) {
+        out.println("<p>Список Голосований пуст!</p>");
     } else {
-        out.println("<p>Список Vote содержит " + vo.size() + " элементов.</p>");
+        out.println("<p>Список Голосований содержит " + votes.size() + " элементов.</p>");
     }
     %>
     <%-- END OF ADDED BLOCK --%>
@@ -49,77 +45,81 @@
         <div class="col-8 border bg-light px-4"> 
           <h3>Список голосований</h3> 
           <table class="table"> 
-            <thead>  
-              <th scope="col">Тема голосования</th>
-              <th scope="col">Дата начала голосования</th>
-              <th scope="col">Дата окончания голосования</th>
-              <th scope="col">Cтатус темы голосования</th> 
-              <th scope="col">Редактировать</th> 
-              <th scope="col">Удалить</th> 
+            <thead>
+            	<tr>  
+              		<th scope="col">Тема голосования</th>
+              		<th scope="col">Дата начала голосования</th>
+              		<th scope="col">Дата окончания голосования</th>
+              		<th scope="col">Cтатус темы голосования</th> 
+              		<th scope="col">Редактировать</th> 
+              		<th scope="col">Удалить</th>
+              	</tr> 
             </thead> 
             <tbody> 
-              <c:forEach var="vote" items="${vo}"> 
+              <c:forEach var="vote" items="${votes}"> 
                 <tr>
 				  <td>${vote.title}</td>
 				  <td>${vote.dateStart}</td>
 				  <td>${vote.dateFinish}</td>
 				  <td>${vote.status}</td> 
-                  <td width="5" height="5"><a href="#" role="button" 
-                     class="btn btn-outline-primary">  
-                     <img alt="Редактировать" 
-                     src="images/icon-edit.png" width="25px" height="25px"></a></td> 
-                   <td width="5" height="5"><a href="#" role="button" 
-                     class="btn btn-outline-primary">  
-                     <img alt="Удалить" 
-                        src="images/icon-delete.png" width="25px" height="25px"></a></td> 
-                  </tr> 
-               </c:forEach> 
-            </tbody> 
-          </table> 
-        </div> 
-        <div class="col-4 border px-4"> 
-          <form method="POST" action=""> 
-            <h3>Новое голосование</h3> 
-            <div class="mb-3"> 
-              <br> <label for="inputtitle"  
-              class="col-sm-3 col-form-label">Тема голосования</label> 
-              <div class="col-sm-6"> 
-                <input type="text" name="inputtitle"  
-                  class="form-control" id="inputtitle" /> 
-            </div>
-            <div class="mb-3"> 
-              <br> <label for="inputdateStart"  
-              class="col-sm-3 col-form-label">Дата начала голосования</label> 
-              <div class="col-sm-6"> 
-                <input type="text" name="inputdateStart"  
-                  class="form-control" id="inputdateStart" /> 
-            </div>
-            <div class="mb-3"> 
-              <br> <label for="inputdateFinish"  
-              class="col-sm-3 col-form-label">Дата окончания голосования</label> 
-              <div class="col-sm-6"> 
-                <input type="text" name="inputdateFinish"  
-                  class="form-control" id="inputdateFinish" /> 
-            </div>
-            <div class="mb-3"> 
-              <br> <label for="inputstatus"  
-              class="col-sm-3 col-form-label">Cтатус темы голосования</label> 
-              <div class="col-sm-6"> 
-                <input type="text" name="inputstatus"  
-                  class="form-control" id="inputstatus" /> 
-            </div>    
-          </div> 
-          <p> 
-            <br> <br> <br> 
-<button type="submit"  
-class="btn btn-primary">Добавить</button> 
+                  <td width="20">
+                      <a href="#" role="button" class="btn btn-outline-primary">
+                           <img alt="Редактировать" src="images/icon-edit.png" width="25px" height="25px">
+                     </a>
+                 </td>
+                 <td width="20">
+                      <a href="#" role="button" class="btn btn-outline-primary">
+                           <img alt="Удалить" src="images/icon-delete.png" width="25px" height="25px">
+                     </a>
+                </td>
+             </tr>
+   			</c:forEach>
+         </tbody>
+         </table>
+       </div>
+       <div class="col-4 border px-4">
+                <h3>Новое голосование</h3>
+                <form method="POST" action="${pageContext.request.contextPath}/vote">  <%-- Corrected Action URL --%>
+                    <div class="mb-3">
+                        <label for="votetitle" class="col-sm-3 col-form-label">Тема голосования:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="title" name="inputtitle" placeholder="Введите тему голосования">
+                        </div>
+                    </div>
+            		<div class="mb-3">
+                        <label for="votedatestart" class="col-sm-3 col-form-label">Дата начала голосования:</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="dateStart" name="inputdateStart" placeholder="Введите Год-Месяц-День">
+                        </div>
+                    </div>
+           			<div class="mb-3">
+                        <label for="votedateFinish" class="col-sm-3 col-form-label">Дата окончания голосования:</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="dateFinish" name="inputdateFinish" placeholder="Введите Год-Месяц-День">
+                        </div>
+                    </div>
+            	<div class="mb-3">
+                        <label for="votestatus" class="col-sm-3 col-form-label">Статус темы голосования:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="status" name="inputstatus">
+                            	<option value="">Выберите статус темы голосования</option>
+                    			<option value="Активно">Активно</option>
+                    			<option value="Завершено">Завершено</option>
+                			</select>
+                        </div>
+                    </div>
+          <p>
+              <c:if test="${not empty errorMessage}">
+        <p style="color:red;">${errorMessage}</p>
+    </c:if> 
+            <br> <br> <br>
+<button type="submit" class="btn btn-primary">Добавить</button>
+</p>  
 <br> 
-</p> 
-</form> 
+</form>
 </div> 
 </div> 
-</div>
- </main>
+</div>   
 	<footer>
 		<jsp:include page="/views/footer.jsp"/>
 	</footer>

@@ -54,7 +54,7 @@ public class VoteDbDAO implements RepositoryDAO<Vote> {
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при добавлении Vote: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при добавлении Голосования: " + e.getMessage(), e);
         }
     }
 
@@ -86,7 +86,7 @@ public class VoteDbDAO implements RepositoryDAO<Vote> {
 
 
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при обновлении Vote: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при обновлении Голосования: " + e.getMessage(), e);
         }
     }
 
@@ -99,7 +99,7 @@ public class VoteDbDAO implements RepositoryDAO<Vote> {
             pst.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при удалении Vote: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при удалении Голосования: " + e.getMessage(), e);
         }
     }
 
@@ -133,7 +133,7 @@ public class VoteDbDAO implements RepositoryDAO<Vote> {
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при поиске Vote по ID: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при поиске Голосования по ID: " + e.getMessage(), e);
         }
         return vote;
     }
@@ -167,7 +167,7 @@ public class VoteDbDAO implements RepositoryDAO<Vote> {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Ошибка при получении списка Vote: " + e.getMessage(), e);
+            throw new DAOException("Ошибка при получении списка Голосования: " + e.getMessage(), e);
         }
         return votes;
     }

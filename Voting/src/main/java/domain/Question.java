@@ -7,6 +7,7 @@ public class Question {
     private Long voteId;
     private String content;
     private LocalDate dateVote;
+    private Vote vote;
 
     public Question() {
     }
@@ -50,6 +51,14 @@ public class Question {
         this.dateVote = dateVote;
     }
 
+    public Vote getVote() {   // ADD THIS METHOD: Getter for the Vote object
+        return vote;
+    }
+
+    public void setVote(Vote vote) { // ADD THIS METHOD: Setter for the Vote object
+        this.vote = vote;
+    }
+    
     @Override
     public String toString() {
         return "Question{" +
@@ -57,6 +66,7 @@ public class Question {
                 ", voteId=" + voteId +
                 ", content='" + content + '\'' +
                 ", dateVote=" + dateVote +
+                ", vote=" + vote +
                 '}';
     }
 }

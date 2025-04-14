@@ -7,11 +7,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import dao.ConnectionProperty;
 import dao.UserDbDAO;
+import dao.VoteDbDAO;
 import domain.User;
+import domain.Vote;
 import exception.DAOException;
 
 /**
@@ -34,15 +39,15 @@ public class UserServlet extends HttpServlet {
         
 		try {
 	        new ConnectionProperty();
-	        UserDbDAO usDAO = new UserDbDAO();
-	        List<User> us = usDAO.findAll();
-	        request.setAttribute("us", us);
+	        UserDbDAO usersDAO = new UserDbDAO();
+	        List<User> users = usersDAO.findAll();
+	        request.setAttribute("users", users);
 
-	        System.out.println("Список User установлен в атрибут: " + (us != null ? us.size() : "null")); // ADD THIS LINE
+	        System.out.println("Список User установлен в атрибут: " + (users != null ? users.size() : "null")); // ADD THIS LINE
 
 	    } catch (DAOException e) {
 	        e.printStackTrace();
-	        request.setAttribute("errorMessage", "Ошибка при получении списка User: " + e.getMessage());
+	        request.setAttribute("errorMessage", "Ошибка при получении списка Голосующих: " + e.getMessage());
 	    }
 
 	        request.getRequestDispatcher("/views/user.jsp").forward(request, response);
@@ -54,8 +59,42 @@ public class UserServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
 		
+		String firstName = request.getParameter("inputfirstName");
+        String lastName = request.getParameter("inputlastName");
+        String email  = request.getParameter("inputemail");
+        String phone = request.getParameter("inputphone");
+        String status = request.getParameter("inputstatus");
+			 //  Проверка на null и пустые строки (опционально, но рекомендуется)
+	        if (firstName == null || firstName.isEmpty() || lastName == null || lastName.isEmpty() || email  == null || email .isEmpty() || phone  == null || phone .isEmpty() || status == null || status.isEmpty()) {
+	            request.setAttribute("errorMessage", "Пожалуйста, заполните все поля.");
+	            doGet(request, response);  //  Вернуться к форме с сообщением об ошибке
+	            return;
+	        }
+	        
+	        // Создание объекта Product
+	        User newUser = new User();
+	        newUser.setFirstName(firstName);
+	        newUser.setLastName(lastName);
+	        newUser.setEmail(email);
+	        newUser.setPhone(phone);
+	        newUser.setStatus(status);
+
+	        // Добавление голосования в базу данных
+	        UserDbDAO userDAO = null; // Объявляем UserDAO вне try
+	        try {
+	             new ConnectionProperty();
+	             userDAO = new UserDbDAO(); // Создание экземпляра DAO
+	             userDAO.insert(newUser);
+	            System.out.println("User added successfully!");
+	        } catch (DAOException e) {
+	            e.printStackTrace();
+	            request.setAttribute("errorMessage", "Ошибка при добавлении голосующего: " + e.getMessage());
+	        } finally {
+	            //  Перенаправление на страницу со списком голосований
+	            doGet(request, response);  //  Или перенаправление на другую страницу
+	        }
 	}
+	
 
 }
