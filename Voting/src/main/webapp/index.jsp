@@ -14,7 +14,7 @@
  
 </head> 
 <body> 
-	<div class="container-fluid"> 
+<div class="container-fluid"> 
 	<jsp:include page="/views/header.jsp" /> 
 	<div class="container"> 
 		<br><br><br> 
@@ -32,11 +32,11 @@
 				</ul> 
 			</div> 
 		<br><br>
-<br> 
-</div> 
+	<br> 
+	</div> 
 </div>  
-	<footer>
-		<jsp:include page="/views/footer.jsp"/>
-	</footer>
+<footer>
+	<jsp:include page="/views/footer.jsp"/>
+</footer>
 </body> 
 </html> 

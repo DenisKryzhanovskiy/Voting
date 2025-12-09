@@ -18,9 +18,7 @@ import dao.VoteDbDAO;
 import domain.Vote;
 import exception.DAOException;
 
-/**
- * Servlet implementation class VoteServlet
- */
+
 @WebServlet("/vote")
 public class VoteServlet extends HttpServlet {
 	 private static final long serialVersionUID = 1L; 
@@ -30,9 +28,6 @@ public class VoteServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
         
@@ -42,7 +37,7 @@ public class VoteServlet extends HttpServlet {
 	        List<Vote> votes = votesDAO.findAll();
 	        request.setAttribute("votes", votes);
 
-	        System.out.println("Список Vote установлен в атрибут: " + (votes != null ? votes.size() : "null")); // ADD THIS LINE
+	        System.out.println("Список Vote установлен в атрибут: " + (votes != null ? votes.size() : "null")); 
 
 	    } catch (DAOException e) {
 	        e.printStackTrace();
@@ -63,52 +58,48 @@ public class VoteServlet extends HttpServlet {
         String dateStartStr = request.getParameter("inputdateStart");
         String dateFinishStr  = request.getParameter("inputdateFinish");
         String status = request.getParameter("inputstatus");
-			 //  Проверка на null и пустые строки (опционально, но рекомендуется)
 	        if (title == null || title.isEmpty() || dateStartStr == null || dateStartStr.isEmpty() || dateFinishStr  == null || dateFinishStr .isEmpty() || status == null || status.isEmpty()) {
 	            request.setAttribute("errorMessage", "Пожалуйста, заполните все поля.");
-	            doGet(request, response);  //  Вернуться к форме с сообщением об ошибке
+	            doGet(request, response); 
 	            return;
 	        }
 
 	        LocalDate dateStart = null;
 	        LocalDate dateFinish = null;
-	        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Adjust format if needed
 
 	        try {
-	            dateStart = LocalDate.parse(dateStartStr, dateFormatter);
-	            dateFinish = LocalDate.parse(dateFinishStr, dateFormatter);
+	            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	            dateStart = LocalDate.parse(dateStartStr, formatter);
+	            dateFinish = LocalDate.parse(dateFinishStr, formatter);
 	        } catch (DateTimeParseException e) {
-	            request.setAttribute("errorMessage", "Неверный формат даты. Пожалуйста введите дату в следующем формате Год-Месяц-День.");
+	            request.setAttribute("errorMessage", "Неверный формат даты. Пожалуйста, введите дату в формате Год-Месяц-День.");
 	            doGet(request, response);
 	            return;
 	        }
 
-	        if (dateStart.isAfter(dateFinish)) {
-	            request.setAttribute("errorMessage", "Дата начала голосования не может быть раньше Даты окончания голосования.");
+	        if (dateStart != null && dateFinish != null && dateStart.isAfter(dateFinish)) {
+	            request.setAttribute("errorMessage", "Дата начала голосования не может быть после Даты окончания голосования.");
 	            doGet(request, response);
 	            return;
 	        }
 	        
-	        // Создание объекта Product
 	        Vote newVote = new Vote();
 	        newVote.setTitle(title);
 	        newVote.setDateStart(dateStart);
 	        newVote.setDateFinish(dateFinish);
 	        newVote.setStatus(status);
 
-	        // Добавление голосования в базу данных
-	        VoteDbDAO voteDAO = null; // Объявляем oteDAO вне try
+	        VoteDbDAO voteDAO = null; 
 	        try {
 	             new ConnectionProperty();
-	             voteDAO = new VoteDbDAO(); // Создание экземпляра DAO
+	             voteDAO = new VoteDbDAO();
 	             voteDAO.insert(newVote);
 	            System.out.println("Vote added successfully!");
 	        } catch (DAOException e) {
 	            e.printStackTrace();
 	            request.setAttribute("errorMessage", "Ошибка при добавлении голосования: " + e.getMessage());
 	        } finally {
-	            //  Перенаправление на страницу со списком голосований
-	            doGet(request, response);  //  Или перенаправление на другую страницу
+	            doGet(request, response); 
 	        }
 	}
 	

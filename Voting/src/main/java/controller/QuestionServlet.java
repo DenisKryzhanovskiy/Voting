@@ -1,6 +1,5 @@
 package controller;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,98 +10,105 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
 import dao.ConnectionProperty;
 import dao.QuestionDbDAO;
-import domain.Question;
 import dao.VoteDbDAO;
+import domain.Question;
 import domain.Vote;
 import exception.DAOException;
 
-/**
- * Servlet implementation class QuestionServlet
- */
 @WebServlet("/question")
 public class QuestionServlet extends HttpServlet {
-	 private static final long serialVersionUID = 1L; 
-	
+    private static final long serialVersionUID = 1L;
+
     public QuestionServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
-    private QuestionDbDAO questionDAO = new QuestionDbDAO();
-    private VoteDbDAO voteDAO = new VoteDbDAO();
-    
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
         try {
-            List<Question> questions = questionDAO.findAll(); 
-             List<Vote> votes = voteDAO.findAll(); 
-            request.setAttribute("questions", questions);
-            request.setAttribute("votes", votes); 
+            new ConnectionProperty();
+            QuestionDbDAO questionDAO = new QuestionDbDAO();
+            VoteDbDAO voteDAO = new VoteDbDAO();
 
+            List<Question> questions = questionDAO.findAll();
+            List<Vote> votes = voteDAO.findAll();
+
+            System.out.println("QuestionServlet.doGet: questions=" +
+                    (questions != null ? questions.size() : "null") +
+                    ", votes=" + (votes != null ? votes.size() : "null"));
+
+            request.setAttribute("questions", questions);
+            request.setAttribute("votes", votes);
         } catch (DAOException e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Ошибка при получении списка Вопросов голосования: " + e.getMessage());
+            request.setAttribute("errorMessage",
+                    "Ошибка при получении списка Вопросов голосования: " + e.getMessage());
         }
 
         request.getRequestDispatcher("/views/question.jsp").forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+
         String voteIdStr = request.getParameter("voteId");
         String content = request.getParameter("content");
         String dateVoteStr = request.getParameter("dateVote");
 
+        if (voteIdStr == null || voteIdStr.isEmpty()
+                || content == null || content.isEmpty()
+                || dateVoteStr == null || dateVoteStr.isEmpty()) {
+            request.setAttribute("errorMessage", "Пожалуйста, заполните все поля.");
+            doGet(request, response);
+            return;
+        }
+
+        Long voteId;
         try {
-            // 1. Validate Input
-            if (voteIdStr == null || voteIdStr.isEmpty() || content == null || content.isEmpty() || dateVoteStr == null || dateVoteStr.isEmpty()) {
-                request.getSession().setAttribute("errorMessage", "Пожалуйста, заполните все поля.");
-                response.sendRedirect(request.getContextPath() + "/question"); 
-                return;
-            }
+            voteId = Long.parseLong(voteIdStr.trim());
+        } catch (NumberFormatException e) {
+            request.setAttribute("errorMessage", "Неверный формат ID голосования.");
+            doGet(request, response);
+            return;
+        }
 
-            Long voteId;
-            try {
-                voteId = Long.parseLong(voteIdStr);
-            } catch (NumberFormatException e) {
-                request.getSession().setAttribute("errorMessage", "Invalid Question ID format.");
-                response.sendRedirect(request.getContextPath() + "/question");
-                return;
-            }
+        LocalDate dateVote;
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            dateVote = LocalDate.parse(dateVoteStr, formatter);
+        } catch (DateTimeParseException e) {
+            request.setAttribute("errorMessage",
+                    "Неверный формат даты. Пожалуйста, введите дату в формате Год-Месяц-День.");
+            doGet(request, response);
+            return;
+        }
 
-            LocalDate dateVote;
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                dateVote = LocalDate.parse(dateVoteStr, formatter);
-            } catch (DateTimeParseException e) {
-                request.getSession().setAttribute("errorMessage", "Неверный формат даты. Пожалуйста введите дату в следующем формате Год-Месяц-День.");
-                response.sendRedirect(request.getContextPath() + "/question");
-                return;
-            }
+        try {
+            new ConnectionProperty();
+            QuestionDbDAO questionDAO = new QuestionDbDAO();
 
-            // 2. Create Question Object
             Question newQuestion = new Question();
             newQuestion.setVoteId(voteId);
             newQuestion.setContent(content);
             newQuestion.setDateVote(dateVote);
 
-            // 3. Save Question to DB
             questionDAO.insert(newQuestion);
-
-            // 4. Success - Redirect with message
-            request.getSession().setAttribute("successMessage", "Question added successfully!");
-            response.sendRedirect(request.getContextPath() + "/question"); // Redirect to question list
-
+            System.out.println("Вопрос успешно добавлен для голосования ID: " + voteId);
         } catch (DAOException e) {
             e.printStackTrace();
-            request.getSession().setAttribute("errorMessage", "Error adding question: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/question");
+            request.setAttribute("errorMessage", "Ошибка при добавлении вопроса: " + e.getMessage());
+            doGet(request, response);
+            return;
         }
+
+        response.sendRedirect(request.getContextPath() + "/question");
     }
 }

@@ -7,21 +7,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import dao.ConnectionProperty;
 import dao.UserDbDAO;
-import dao.VoteDbDAO;
 import domain.User;
-import domain.Vote;
 import exception.DAOException;
 
-/**
- * Servlet implementation class UserServlet
- */
 @WebServlet("/user")
 public class UserServlet extends HttpServlet {
 	 private static final long serialVersionUID = 1L; 
@@ -31,9 +23,6 @@ public class UserServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
         
@@ -43,7 +32,7 @@ public class UserServlet extends HttpServlet {
 	        List<User> users = usersDAO.findAll();
 	        request.setAttribute("users", users);
 
-	        System.out.println("Список User установлен в атрибут: " + (users != null ? users.size() : "null")); // ADD THIS LINE
+	        System.out.println("Список User установлен в атрибут: " + (users != null ? users.size() : "null")); 
 
 	    } catch (DAOException e) {
 	        e.printStackTrace();
@@ -65,14 +54,12 @@ public class UserServlet extends HttpServlet {
         String email  = request.getParameter("inputemail");
         String phone = request.getParameter("inputphone");
         String status = request.getParameter("inputstatus");
-			 //  Проверка на null и пустые строки (опционально, но рекомендуется)
 	        if (firstName == null || firstName.isEmpty() || lastName == null || lastName.isEmpty() || email  == null || email .isEmpty() || phone  == null || phone .isEmpty() || status == null || status.isEmpty()) {
 	            request.setAttribute("errorMessage", "Пожалуйста, заполните все поля.");
-	            doGet(request, response);  //  Вернуться к форме с сообщением об ошибке
+	            doGet(request, response);  
 	            return;
 	        }
 	        
-	        // Создание объекта Product
 	        User newUser = new User();
 	        newUser.setFirstName(firstName);
 	        newUser.setLastName(lastName);
@@ -80,19 +67,17 @@ public class UserServlet extends HttpServlet {
 	        newUser.setPhone(phone);
 	        newUser.setStatus(status);
 
-	        // Добавление голосования в базу данных
-	        UserDbDAO userDAO = null; // Объявляем UserDAO вне try
+	        UserDbDAO userDAO = null;
 	        try {
 	             new ConnectionProperty();
-	             userDAO = new UserDbDAO(); // Создание экземпляра DAO
+	             userDAO = new UserDbDAO(); 
 	             userDAO.insert(newUser);
 	            System.out.println("User added successfully!");
 	        } catch (DAOException e) {
 	            e.printStackTrace();
 	            request.setAttribute("errorMessage", "Ошибка при добавлении голосующего: " + e.getMessage());
 	        } finally {
-	            //  Перенаправление на страницу со списком голосований
-	            doGet(request, response);  //  Или перенаправление на другую страницу
+	            doGet(request, response);  
 	        }
 	}
 	

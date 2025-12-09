@@ -51,11 +51,11 @@ public class Question {
         this.dateVote = dateVote;
     }
 
-    public Vote getVote() {   // ADD THIS METHOD: Getter for the Vote object
+    public Vote getVote() {  
         return vote;
     }
 
-    public void setVote(Vote vote) { // ADD THIS METHOD: Setter for the Vote object
+    public void setVote(Vote vote) { 
         this.vote = vote;
     }
     
